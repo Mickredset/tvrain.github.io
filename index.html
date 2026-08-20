@@ -1,1 +1,93 @@
+<!DOCTYPE html>
+<h1>TVRAIN</h1>
+<!-- Кнопки с путями к разным видео -->
+<button class="show-video-btn" data-video="tvrain.avi">0</button>
 
+<!-- Одно общее модальное окно -->
+<div id="videoModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <video controls id="myVideo">
+      <source src="" type="video/mp4">
+      Ошибка!
+    </video>
+  </div>
+</div>
+
+<style>
+  /* Стили остаются прежними */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-content {
+    position: relative;
+    max-width: 800px;
+    width: 90%;
+  }
+
+  .modal-content video {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    color: #fff;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  // Находим ВСЕ кнопки с нужным классом
+  const buttons = document.querySelectorAll('.show-video-btn');
+  const modal = document.getElementById('videoModal');
+  const closeBtn = document.querySelector('.close-btn');
+  const video = document.getElementById('myVideo');
+
+  // Перебираем кнопки и вешаем событие клика на каждую
+  buttons.forEach(button => {
+    button.addEventListener('click', function() {
+      // 1. Получаем путь к видео из атрибута data-video нажатой кнопки
+      const videoSrc = this.getAttribute('data-video');
+      
+      // 2. Меняем источник видео в плеере
+      video.src = videoSrc;
+      
+      // 3. Показываем окно и запускаем видео
+      modal.style.display = 'flex';
+      video.play();
+    });
+  });
+
+  // Функция закрытия окна и остановки видео
+  function closeModal() {
+    modal.style.display = 'none';
+    video.pause();
+    video.src = ""; // Очищаем источник, чтобы видео не качалось в фоне
+  }
+
+  // Закрытие по крестику
+  closeBtn.onclick = closeModal;
+
+  // Закрытие по клику на темный фон
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      closeModal();
+    }
+  }
+</script>
